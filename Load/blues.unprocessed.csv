@@ -1,0 +1,22 @@
+point,geom,x,y,x.distance,y.distance,equation,r,angle
+1,segment,-3.615,-3.395,,,linear 1,,
+2,segment,-10.925,8.735,1.3,0,linear 1,,
+3,segment,,,,-2.4,linear 3,,
+4,curve,,5.975,,,linear 3,-0.75,94
+5,segment,,8.015,,,linear 6,0.65,108
+6,segment,-6.985,8.735,17.35,0,linear 6,,
+7,curve,10.715,,,-2.4,,0.35,145
+8,segment,,,,0,linear 6,,
+9,curve,,,,-2,,0.35,150
+10,segment,,,,0,linear 6,,
+11,curve,,,,-2,,0.35,155
+12,segment,,,,0,linear 6,,
+13,curve,,,,-1.5,,0.25,110
+14,segment,1.065,,,-0.9,,,
+15,curve,,,,0,,0.05,120
+16,segment,,,,-0.79,linear 6,,
+17,curve,-1.205701,,,0.5,linear 6,0.1,130
+18,segment,,,,-4.3,linear 3,,
+19,curve,,,,-6.82,linear 3,0.65,107.5
+20,curve,-5.435,-8.735,,,,0.5,72.5
+21,curve,-9.235,-5.485,,,,0.45,110
