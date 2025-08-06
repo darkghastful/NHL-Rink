@@ -1,17 +1,27 @@
+#' Rink logo
+#'
+#' @param team teamName teamTriCode or teamId accepted (default is NA)
+#'
+#' @return team.logo
+#' @export
+#'
+#' @examples
+#' rink.logo("STL")
 rink.logo <- function(team){
-  team.logos <- read.csv("Load/team.logos.csv")
+  csv.path <- system.file("extdata", "team.logos.csv", package="NHL.Rink")
+  team.logos <- utils::read.csv(csv.path)
   team <- teamName.teamId.triCode(team, team.logos)$triCode
   logo <- team.logos[team.logos[,"triCode"]==team,]
   if(nrow(logo)>1){
     logo <- logo[nrow(logo), ]
   }
-  logo <- rsvg_raw(logo[,"lightLogo"])
-  logo <- image_read(logo)
-  logo <- image_fx(logo, expression = "a*0.7", channel="alpha")
-  raster <- as.raster(logo)
-  grob <- rasterGrob(raster, width=unit(1, "snpc"), height=unit(1, "snpc"), just="centre", interpolate=TRUE)
+  logo <- rsvg::rsvg_raw(logo[,"lightLogo"])
+  logo <- magick::image_read(logo)
+  logo <- magick::image_fx(logo, expression = "a*0.7", channel="alpha")
+  raster <- grDevices::as.raster(logo)
+  grob <- grid::rasterGrob(raster, width=grid::unit(1, "snpc"), height=grid::unit(1, "snpc"), just="centre", interpolate=TRUE)
   logo.size <- 13
-  team.logo <- annotation_custom(ymin=-logo.size, ymax=logo.size, xmin=-logo.size, xmax=logo.size, grob=grob)
+  team.logo <- ggplot2::annotation_custom(ymin=-logo.size, ymax=logo.size, xmin=-logo.size, xmax=logo.size, grob=grob)
   return(team.logo)
 }
 
@@ -20,21 +30,25 @@ rink.logo <- function(team){
 #' @description Generates a frame used to plot a Blues note from simple information.
 #'
 #' @param save boolean switch referencing a csv save of the intermediate blues.note.csv (default is FALSE)
-#' @arg blues.unprocessed table of required data that provides the structure for the blues note plot
+#' @param ... optional arguments for internal processing (unused)
 #'
 #' @return blues.note
 #' @export
 #'
 #' @examples
-blues.note.processing <- function(blues.unprocessed=NA, save=FALSE){
-  if(!is(blues.unprocessed, "dataframe")){
-    blues.unprocessed <- read.csv("Load/blues.unprocessed.csv")
+#' blues.note.processing()
+blues.note.processing <- function(save=FALSE, ...){
+  args <- list(...)
+  if(!exists("blues.unprocessed")){
+    csv.path <- system.file("extdata", "blues.unprocessed.csv", package="NHL.Rink")
+    blues.unprocessed <- utils::read.csv(csv.path)
+    # blues.unprocessed <- utils::read.csv("inst/extdata/blues.unprocessed.csv")
   }
 
   direction <- c("x", "y")
-  for(b in 1:length(direction)){
+  for(b in seq_len(length(direction))){
     calculate <- which(is.na(blues.unprocessed[, direction[b]]))
-    for(a in 1:length(calculate)){
+    for(a in seq_len(length(calculate))){
       blues.unprocessed[calculate[a], direction[b]] <- blues.unprocessed[calculate[a]-1, direction[b]] + blues.unprocessed[calculate[a]-1, paste0(direction[b], ".distance")]
     }
   }
@@ -44,7 +58,7 @@ blues.note.processing <- function(blues.unprocessed=NA, save=FALSE){
   y1 <- blues.unprocessed[curve.rows[2], "y"]
   x2 <- blues.unprocessed[curve.rows[7], "x"]
   y2 <- blues.unprocessed[curve.rows[7], "y"]
-  curve.equation.y <- curve.equation("y", x1, y1, x2, y2, 0.07)[[1]]
+  curve.equation.y <- bqutils::curve.equation("y", x1, y1, x2, y2, 0.07)[[1]]
   curve <- eval(parse(text=curve.equation.y))
   for(a in 2:7){
     blues.unprocessed[curve.rows[a], "x"] <- curve(blues.unprocessed[curve.rows[a], "y"])
@@ -53,31 +67,27 @@ blues.note.processing <- function(blues.unprocessed=NA, save=FALSE){
   # Calculate slope
   point.1 <- which(blues.unprocessed[,"point"]==1)
   point.2 <- which(blues.unprocessed[,"point"]==2)
-  general.slope <- slope(c(blues.unprocessed[point.1, "x"], blues.unprocessed[point.1, "y"]), c(blues.unprocessed[point.2, "x"], blues.unprocessed[point.2, "y"]))
+  general.slope <- bqutils::slope(c(blues.unprocessed[point.1, "x"], blues.unprocessed[point.1, "y"]),
+                                  c(blues.unprocessed[point.2, "x"], blues.unprocessed[point.2, "y"]))
 
-
-
-  equations <- uuln(blues.unprocessed[, "equation"])
-  linear.equation.names <- remove.na(equations[str_detect(equations, "linear")])
+  equations <- bqutils::uuln(blues.unprocessed[, "equation"])
+  linear.equation.names <- bqutils::remove.na(equations[stringr::str_detect(equations, "linear")])
   linear.equations <- rep(list(NA), length(linear.equation.names))
   names(linear.equations) <- linear.equation.names
-  for(a in 1:length(linear.equations)){
-    point.row <- which(blues.unprocessed[, "point"]==as.numeric(str_remove(linear.equation.names[a], "linear ")))
-    linear.equations[[a]] <- linear.equation(x=blues.unprocessed[point.row, "x"], y=blues.unprocessed[point.row, "y"], slope=general.slope)
+  for(a in seq_len(length(linear.equations))){
+    point.row <- which(blues.unprocessed[, "point"]==as.numeric(stringr::str_remove(linear.equation.names[a], "linear ")))
+    linear.equations[[a]] <- bqutils::linear.equation(x=blues.unprocessed[point.row, "x"], y=blues.unprocessed[point.row, "y"], slope=general.slope)
   }
 
-  linear.rows <- which(str_detect(blues.unprocessed[, "equation"], "linear ")==TRUE)
-  for(a in 1:length(linear.rows)){
+  linear.rows <- which(stringr::str_detect(blues.unprocessed[, "equation"], "linear ")==TRUE)
+  for(a in seq_len(length(linear.rows))){
     equation <- linear.equations[[blues.unprocessed[linear.rows[a], "equation"]]]
-    x.y <- linear.equation(blues.unprocessed[linear.rows[a], "x"], blues.unprocessed[linear.rows[a], "y"], general.slope, equation)
+    x.y <- bqutils::linear.equation(blues.unprocessed[linear.rows[a], "x"], blues.unprocessed[linear.rows[a], "y"], general.slope, equation)
     blues.unprocessed[linear.rows[a], "x"] <- x.y[[1]]
     blues.unprocessed[linear.rows[a], "y"] <- x.y[[2]]
   }
 
-
-  # generate.linear.equation(blues.unprocessed[linear.rows[a], "x"], blues.unprocessed[linear.rows[a], "y"], general.slope)
-
-  for(a in 1:nrow(blues.unprocessed)){
+  for(a in seq_len(nrow(blues.unprocessed))){
     if(a!=nrow(blues.unprocessed)){
       blues.unprocessed[a, "x.end"] <- blues.unprocessed[(a+1),"x"]
       blues.unprocessed[a, "y.end"] <- blues.unprocessed[(a+1),"y"]
@@ -88,19 +98,18 @@ blues.note.processing <- function(blues.unprocessed=NA, save=FALSE){
   }
 
   curve.rows <- which(blues.unprocessed[, "geom"]=="curve")[c(2:4)]
-  for(a in 1:length(curve.rows)){
+  for(a in seq_len(length(curve.rows))){
     blues.unprocessed[curve.rows[a], "x.end"] <- blues.unprocessed[curve.rows[a]+1, "x.end"]-1.75
   }
 
   blues.note <- blues.unprocessed
 
   if(save){
-    write.csv(blues.note, "./blues.note.csv")
+    utils::write.csv(blues.note, "./blues.note.csv")
   }
 
   return(blues.note)
 }
-
 
 #' Blues note plot
 #'
@@ -113,14 +122,13 @@ blues.note.processing <- function(blues.unprocessed=NA, save=FALSE){
 #' @export
 #'
 #' @examples
+#' blues.note.plot()
 blues.note.plot <- function(rink=FALSE, save=FALSE){
-  # if(is.na(blues.note)){
   blues.note <- blues.note.processing()
-  # }
 
   if(rink){
     direction <- c("x", "y")
-    for(a in 1:length(direction)){
+    for(a in seq_len(length(direction))){
       max <- max(blues.note[, direction[a]])
       min <- min(blues.note[,direction[a]])
       shift <- (min + ((max-min)/2))
@@ -135,26 +143,26 @@ blues.note.plot <- function(rink=FALSE, save=FALSE){
     blues.plot <- rink.plot()
   }else{
     transparancy <- 1
-    blues.plot <- ggplot() + theme_void()
+    blues.plot <- ggplot2::ggplot() + ggplot2::theme_void()
   }
 
   size=1
 
   # Add logo segments to the plot
   blues.plot <- blues.plot +
-    geom_segment(data=subset.object(blues.note, "segment", "geom"), alpha=transparancy, aes(x=x, xend=x.end, y=y, yend=y.end), size=size, lineend="round")
+    ggplot2::geom_segment(data=bqutils::subset.object(blues.note, "segment", "geom"), alpha=transparancy,
+                          ggplot2::aes(x=x, xend=x.end, y=y, yend=y.end), size=size, lineend="round")
 
-  blues.note.curve <- subset.object(blues.note, "curve", "geom")
+  blues.note.curve <- bqutils::subset.object(blues.note, "curve", "geom")
   # Add logo curves to the plot
-  for(a in 1:nrow(blues.note.curve)){
+  for(a in seq_len(nrow(blues.note.curve))){
     blues.plot <- blues.plot +
-      geom_curve(data=blues.note.curve[a,], alpha=transparancy, inherit.aes=FALSE, curvature=-blues.note.curve[a, "r"],
-                 angle=blues.note.curve[a, "angle"], lineend="round", size=size,
-                 aes(x=x, xend=x.end, y=y, yend=y.end))
+      ggplot2::geom_curve(data=blues.note.curve[a,], alpha=transparancy, inherit.aes=FALSE, curvature=-blues.note.curve[a, "r"],
+                          angle=blues.note.curve[a, "angle"], lineend="round", size=size,
+                          ggplot2::aes(x=x, xend=x.end, y=y, yend=y.end))
   }
 
   if(save & rink){
-    # saveRDS(blues.plot, "Load/blues.rink.plot.rds")
     saveRDS(blues.plot, "./blues.rink.plot.rds")
   }else if(save & !rink){
     saveRDS(blues.plot, "./blues.note.plot.rds")

@@ -1,3 +1,6 @@
 ^NHL\.Rink\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^README\.Rmd$
+^package.creation\.R$
+^NHL\.logos\.R$

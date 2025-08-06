@@ -1,4 +1,3 @@
-
 #' Rink
 #'
 #' @description Generates a plot containing an NHL regulation rink with a team logo.
@@ -11,16 +10,8 @@
 #' @examples
 #' rink("STL")
 rink <- function(team=NA){
-  # To run this code you need ggplot2 and ggforce packages installed and loaded
-  # My function subset is needed to run
-
-  # if(team %in% c("St. Louis Blues", "STL", "19", 19)){
-  #   blues.rink.plot <- readRDS("Load/blues.rink.plot.rds")
-  #   return(blues.rink.plot)
-  # }
-
-  # Direct to and read the .csv files
-  rink.plot <- readRDS("Load/rink.plot.rds")
+  rds.path <- system.file("extdata", "rink.plot.rds", package="NHL.Rink")
+  rink.plot <- readRDS(rds.path)
 
   if(!is.na(team)){
     logo <- rink.logo(team)
@@ -36,24 +27,24 @@ rink <- function(team=NA){
 #' @description Generates a frame used to plot an NHL regulation ice rink from simple information.
 #'
 #' @param save boolean switch referencing a csv save of the intermediate rink.frame.csv (default is FALSE)
-#' @arg rink.unprocessed table of required data that provides the structure for the ice rink plot
+#' @param ... optional arguments for internal processing (unused)
 #'
 #' @return rink.frame
 #' @export
 #'
 #' @examples
 #' rink.processing()
-rink.processing <- function(save=FALSE, rink.unprocessed=NA){
-  # Used to process rink.unprocessed.csv
-  # Direct to and read the .csv files
-  if(!is(rink.unprocessed, "dataframe")){
-    rink.unprocessed <- read.csv("Load/rink.unprocessed.csv")
+rink.processing <- function(save=FALSE, ...){
+  args <- list(...)
+  if(!exists("rink.unprocessed")){
+    csv.path <- system.file("extdata", "rink.unprocessed.csv", package="NHL.Rink")
+    rink.unprocessed <- utils::read.csv(csv.path)
+    # rink.unprocessed <- utils::read.csv("inst/extdata/rink.unprocessed.csv")
   }
 
   rink.y <- 90
   rink.x <- (200/85)*90
   rink.scale <- 10
-  # rink.unprocessed[,"size"] <- ((rink.unprocessed[,"size"]*1.333333) * 25.4)/rink.scale
 
   rink.unprocessed[,"size"] <- (rink.unprocessed[,"size"] * 25.4)/rink.scale
 
@@ -61,11 +52,10 @@ rink.processing <- function(save=FALSE, rink.unprocessed=NA){
 
   rink.unprocessed[which(rink.unprocessed[,"geom"]=="curve"), "size"] <- (rink.unprocessed[which(rink.unprocessed[,"geom"]=="curve"), "size"]/0.75)*1
 
-  endzone.faceoff.segments <- subset.object(subset.object(rink.unprocessed, "endzone.faceoff", "element"), "segment", "geom")
+  endzone.faceoff.segments <- bqutils::subset.object(bqutils::subset.object(rink.unprocessed, "endzone.faceoff", "element"), "segment", "geom")
 
-  faceoff.circle <- subset.object(subset.object(rink.unprocessed, "endzone.faceoff", "element"), "circle", "geom")
+  faceoff.circle <- bqutils::subset.object(bqutils::subset.object(rink.unprocessed, "endzone.faceoff", "element"), "circle", "geom")
   faceoff.top.line.x <- 2.875
-  # use half the distance between top two lines as one side and radius of face off circle for the other two sides
   theta <- acos(((faceoff.circle[1,"r"]^2)+(faceoff.circle[1,"r"]^2)-(2.875^2))/(2*(faceoff.circle[1,"r"]^2)))
   faceoff.top.line.y <- faceoff.circle[1,"r"]*cos(theta)
 
@@ -82,9 +72,8 @@ rink.processing <- function(save=FALSE, rink.unprocessed=NA){
     endzone.faceoff.segments[, c(dir[a], paste0(dir[a], "end"))] <- endzone.faceoff.segments[, c(dir[a], paste0(dir[a], "end"))] + faceoff.circle[1, dir[a]]
   }
 
-  rink.unprocessed <- rbind(subset.object(rink.unprocessed, "endzone.faceoff", "element", remove=TRUE), faceoff.circle, endzone.faceoff.segments)
+  rink.unprocessed <- rbind(bqutils::subset.object(rink.unprocessed, "endzone.faceoff", "element", remove=TRUE), faceoff.circle, endzone.faceoff.segments)
 
-  # Mirror the elements over the respective axis
   dir <- c("x", "y")
   for(a in 1:length(dir)){
     rink.unprocessed.inverse.dir <- rink.unprocessed[rink.unprocessed[, paste0("inverse.", dir[a])],]
@@ -95,13 +84,17 @@ rink.processing <- function(save=FALSE, rink.unprocessed=NA){
   rink.frame <- rink.unprocessed
 
   if(save){
-    write.csv(rink.frame, "./rink.csv")
+    utils::write.csv(rink.frame, "./rink.csv")
   }
   return(rink.frame)
 }
 
 
 #' Rink plot
+#' @importFrom magrittr %>%
+#' @importFrom scales alpha
+#' @importFrom ggplot2 stage
+#' @importFrom ggforce geom_circle
 #'
 #' @description Generates a plot containing an NHL regulation ice rink.
 #'
@@ -113,60 +106,49 @@ rink.processing <- function(save=FALSE, rink.unprocessed=NA){
 #' @examples
 #' rink.plot()
 rink.plot <- function(save=FALSE){
-  # if(!is(rink.frame, "dataframe")){
-    rink.frame <- rink.processing()
-  # }
+  rink.frame <- rink.processing()
 
   transparancy <- 1
   rink.y <- 90
   rink.x <- (200/85)*90
   rink.scale <- 10
 
-  # Generate blank plot bound by the rink dimensions (acknowledge the size, color, and fill arguments)
-  rink.plot <- ggplot() +
-    theme_void() +
-    scale_size_identity() +
-    scale_color_identity() +
-    scale_fill_identity() +
-    scale_x_continuous(limits=c(-(rink.x/2), (rink.x/2)), breaks=seq(-100, 100, by=25), expand=expansion(mult=c(0.01, 0.01))) +
-    scale_y_continuous(limits=c(-(rink.y/2), (rink.y/2)), breaks=seq(-42.5, 42.5, by=25), expand=expansion(mult=c(0.01, 0.01)))
+  rink.plot <- ggplot2::ggplot() +
+    ggplot2::theme_void() +
+    ggplot2::scale_size_identity() +
+    ggplot2::scale_color_identity() +
+    ggplot2::scale_fill_identity() +
+    ggplot2::scale_x_continuous(limits=c(-(rink.x/2), (rink.x/2)), breaks=seq(-100, 100, by=25), expand=ggplot2::expansion(mult=c(0.01, 0.01))) +
+    ggplot2::scale_y_continuous(limits=c(-(rink.y/2), (rink.y/2)), breaks=seq(-42.5, 42.5, by=25), expand=ggplot2::expansion(mult=c(0.01, 0.01)))
 
-  layers <- uuln(rink.frame[,"layer"]) %>%
+  layers <- bqutils::uuln(rink.frame[,"layer"]) %>%
     .[order(.)]
   for(b in 1:length(layers)){
     if(layers[b]==4){
       transparancy <- 1
     }
-    rink.frame.layer <- subset.object(rink.frame, layers[b], "layer")
-    # Add curves to the plot
-    rink.frame.layer.curve <- subset.object(rink.frame.layer, "curve", "geom")
+    rink.frame.layer <- bqutils::subset.object(rink.frame, layers[b], "layer")
+    rink.frame.layer.curve <- bqutils::subset.object(rink.frame.layer, "curve", "geom")
     if(nrow(rink.frame.layer.curve)>0){
       for(a in 1:nrow(rink.frame.layer.curve)){
         rink.plot <- rink.plot +
-          geom_curve(data=rink.frame.layer.curve[a,], alpha=transparancy, inherit.aes=FALSE, curvature=rink.frame.layer.curve[a, "curvature"],
-                     aes(x=x, xend=xend, y=y, yend=yend, size=size, color=color))
+          ggplot2::geom_curve(data=rink.frame.layer.curve[a,], alpha=transparancy, inherit.aes=FALSE, curvature=rink.frame.layer.curve[a, "curvature"],
+                              ggplot2::aes(x=x, xend=xend, y=y, yend=yend, size=size, color=color))
       }
     }
-
-    # Add circles to the plot
+    # alpha("#1F77B4", 0.5)
     rink.plot <- rink.plot +
-      geom_circle(data=subset.object(rink.frame.layer, "circle", "geom"), alpha=transparancy, inherit.aes=FALSE,
-                  aes(x0=x, y0=y, r=r, size=size, color=stage(color, after_scale=alpha(color, transparancy)), fill=fill))
-    # Add segments to the plot
+      ggforce::geom_circle(data=bqutils::subset.object(rink.frame.layer, "circle", "geom"), inherit.aes=FALSE,
+                           ggplot2::aes(x0=x, y0=y, r=r, size=size, color=color, fill=fill))
     rink.plot <- rink.plot +
-      geom_segment(data=subset.object(rink.frame.layer, "segment", "geom"), alpha=transparancy, inherit.aes=FALSE,
-                   aes(x=x, xend=xend, y=y, yend=yend, size=size, color=color))
-    # print(rink.frame.layer)
+      ggplot2::geom_segment(data=bqutils::subset.object(rink.frame.layer, "segment", "geom"), alpha=transparancy, inherit.aes=FALSE,
+                            ggplot2::aes(x=x, xend=xend, y=y, yend=yend, size=size, color=color))
   }
 
-  rink.plot <- rink.plot + theme(plot.background=element_rect(color="white", fill="white"))
+  rink.plot <- rink.plot + ggplot2::theme(plot.background=ggplot2::element_rect(color="white", fill="white"))
 
   if(save){
-    # saveRDS(rink.plot, "Load/rink.plot.rds")
     saveRDS(rink.plot, "./rink.plot.rds")
   }
   return(rink.plot)
 }
-
-
-
