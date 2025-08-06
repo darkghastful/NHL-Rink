@@ -1,4 +1,4 @@
-#' Rink logo
+##' Rink logo
 #'
 #' @param team teamName teamTriCode or teamId accepted (default is NA)
 #'
@@ -11,13 +11,13 @@ rink.logo <- function(team){
   csv.path <- system.file("extdata", "team.logos.csv", package="NHL.Rink")
   team.logos <- utils::read.csv(csv.path)
   team <- teamName.teamId.triCode(team, team.logos)$triCode
-  logo <- team.logos[team.logos[,"triCode"]==team,]
+  logo <- suppressWarnings(team.logos[team.logos[,"triCode"]==team,])
   if(nrow(logo)>1){
     logo <- logo[nrow(logo), ]
   }
   logo <- rsvg::rsvg_raw(logo[,"lightLogo"])
   logo <- magick::image_read(logo)
-  logo <- magick::image_fx(logo, expression = "a*0.7", channel="alpha")
+  # logo <- magick::image_fx(logo, expression = "a*0.9", channel="alpha")
   raster <- grDevices::as.raster(logo)
   grob <- grid::rasterGrob(raster, width=grid::unit(1, "snpc"), height=grid::unit(1, "snpc"), just="centre", interpolate=TRUE)
   logo.size <- 13
@@ -139,27 +139,35 @@ blues.note.plot <- function(rink=FALSE, save=FALSE){
       blues.note[, paste0(direction[a], ".end")] <- blues.note[, paste0(direction[a], ".end")] - shift
     }
 
-    transparancy <- 0.7
+    transparancy <- 1
     blues.plot <- rink.plot()
+    rink.layers <- length(blues.plot$layers)
   }else{
     transparancy <- 1
-    blues.plot <- ggplot2::ggplot() + ggplot2::theme_void()
+    blues.plot <- ggplot2::ggplot() +
+      ggplot2::theme_void() +
+      ggplot2::scale_linewidth_identity()
   }
 
-  size=1
+  size=0.5
 
   # Add logo segments to the plot
   blues.plot <- blues.plot +
     ggplot2::geom_segment(data=bqutils::subset.object(blues.note, "segment", "geom"), alpha=transparancy,
-                          ggplot2::aes(x=x, xend=x.end, y=y, yend=y.end), size=size, lineend="round")
+                          ggplot2::aes(x=x, xend=x.end, y=y, yend=y.end), linewidth=size, lineend="round")
 
   blues.note.curve <- bqutils::subset.object(blues.note, "curve", "geom")
   # Add logo curves to the plot
   for(a in seq_len(nrow(blues.note.curve))){
     blues.plot <- blues.plot +
       ggplot2::geom_curve(data=blues.note.curve[a,], alpha=transparancy, inherit.aes=FALSE, curvature=-blues.note.curve[a, "r"],
-                          angle=blues.note.curve[a, "angle"], lineend="round", size=size,
+                          angle=blues.note.curve[a, "angle"], lineend="round", linewidth=size,
                           ggplot2::aes(x=x, xend=x.end, y=y, yend=y.end))
+  }
+
+  if(rink){
+    note.layers <- length(blues.plot$layers)
+    blues.plot$layers <- c(blues.plot$layers[rink.layers:note.layers], blues.plot$layers[1:rink.layers])
   }
 
   if(save & rink){

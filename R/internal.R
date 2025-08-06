@@ -1,9 +1,8 @@
 #' @keywords internal
 teamName.teamId.triCode <- function(team, object = NA) {
   if (all(is.na(object))) {
-    object <- content.from.endpoint("https://api.nhle.com/stats/rest/en/team")$data
-    object <- bqutils::rename.column(object, "id", "teamId")
-    object <- bqutils::rename.column(object, "fullName", "teamName")
+    csv.path <- system.file("extdata", "team.logos.csv", package="NHL.Rink")
+    object <- utils::read.csv(csv.path)
   }
 
   if (length(stringr::str_split(team, " ")[[1]]) > 1) {
@@ -32,3 +31,40 @@ content.from.endpoint <- function(url, content.type = "application/octet-stream"
   }
   return(encoded)
 }
+
+#' @keywords internal
+NHL.teams <- function(){
+  csv.path <- system.file("extdata", "team.logos.csv", package="NHL.Rink")
+  object <- utils::read.csv(csv.path)
+  object <- object[, c("teamName", "teamId", "triCode")]
+  return(object)
+}
+
+
+# object <- content.from.endpoint("https://api.nhle.com/stats/rest/en/team")$data
+# object <- rename.column(object, "id", "teamId")
+# object <- rename.column(object, "fullName", "teamName")
+#
+# for(element in 1:nrow(object)){
+#   urls <- logo.endpoint(object[element, "triCode"])
+#   if(length(uln(urls))==2){
+#     object[element, "lightLogo"] <- urls$light
+#     object[element, "darkLogo"] <- urls$light
+#   }else{
+#     object[element, "lightLogo"] <- urls$light[[2]]
+#     object[element, "darkLogo"] <- urls$light[[2]]
+#   }
+#
+# }
+#
+# for(team in 1:nrow(object)){
+#   res <- try(rsvg_raw(object[team, "lightLogo"]), silent=TRUE)
+#   if(inherits(res, "try-error")) {
+#     object[team, "lightLogo"] <- NA
+#   }
+# }
+# object <- object[, c("teamName", "teamId", "triCode", "lightLogo")]
+# object <- remove.na(object, "lightLogo")
+#
+# write.csv(object, "inst/extdata/team.logos.csv", row.names=FALSE)
+# read.csv("inst/extdata/team.logos.csv")
