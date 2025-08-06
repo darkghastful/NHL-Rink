@@ -12,7 +12,7 @@ RoxygenNote: 7.3.1
 Imports: 
   bqutils,
   stringr,
-  ggforce,
+  ggforce (>= 0.4.2),
   magick,
   rsvg,
   magrittr,
