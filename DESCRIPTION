@@ -12,12 +12,11 @@ RoxygenNote: 7.3.1
 Imports: 
   bqutils,
   stringr,
-  ggforce (>= 0.4.2),
   magick,
   rsvg,
   magrittr,
   jsonlite,
   scales,
   httr
-Depends: ggplot2 (>= 3.5.2)
+Depends: ggplot2 (>= 3.5.2), ggforce (>= 0.5.0)
 Remotes: darkghastful/bqutils

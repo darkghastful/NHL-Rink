@@ -34,7 +34,7 @@ rink <- function(team=NA){
 #'
 #' @examples
 #' rink.processing()
-rink.processing <- function(save=FALSE, ...){
+rink.processing <- function (save=FALSE, ...){
   args <- list(...)
   if(!exists("rink.unprocessed")){
     csv.path <- system.file("extdata", "rink.unprocessed.csv", package="NHL.Rink")
@@ -44,9 +44,11 @@ rink.processing <- function(save=FALSE, ...){
 
   rink.y <- 90
   rink.x <- (200/85)*90
-  rink.scale <- 15
+  rink.scale <- 10
 
+  # rink.unprocessed[,"size"] <- (rink.unprocessed[,"size"] / rink.scale)*25.4
   rink.unprocessed[,"size"] <- (rink.unprocessed[,"size"] * 25.4)/rink.scale
+
   rink.unprocessed[which(rink.unprocessed[,"geom"]=="segment"), "size"] <- (rink.unprocessed[which(rink.unprocessed[,"geom"]=="segment"), "size"]/0.75)*1
   rink.unprocessed[which(rink.unprocessed[,"geom"]=="curve"), "size"] <- (rink.unprocessed[which(rink.unprocessed[,"geom"]=="curve"), "size"]/0.75)*1
 
@@ -109,13 +111,12 @@ rink.plot <- function(save=FALSE){
   transparancy <- 1
   rink.y <- 90
   rink.x <- (200/85)*90
-  rink.scale <- 10
+  rink.scale <- 300
   rink.frame[,"size"] <- as.numeric(rink.frame[,"size"])
 
   rink.plot <- ggplot2::ggplot() +
     ggplot2::theme_void() +
     ggplot2::scale_linewidth_identity() +
-    ggplot2::scale_size_identity() +
     ggplot2::scale_color_identity() +
     ggplot2::scale_fill_identity() +
     ggplot2::scale_x_continuous(limits=c(-(rink.x/2), (rink.x/2)), breaks=seq(-100, 100, by=25), expand=ggplot2::expansion(mult=c(0.01, 0.01))) +
@@ -132,7 +133,7 @@ rink.plot <- function(save=FALSE){
     if(nrow(rink.frame.layer.curve)>0){
       for(a in 1:nrow(rink.frame.layer.curve)){
         rink.plot <- rink.plot +
-          ggplot2::geom_curve(data=rink.frame.layer.curve[a,], lineend = "square", alpha=transparancy, inherit.aes=FALSE, curvature=rink.frame.layer.curve[a, "curvature"],
+          ggplot2::geom_curve(data=rink.frame.layer.curve[a,], alpha=transparancy, inherit.aes=FALSE, curvature=rink.frame.layer.curve[a, "curvature"],
                               ggplot2::aes(x=x, xend=xend, y=y, yend=yend, linewidth=size, color=color))
       }
     }
@@ -141,7 +142,7 @@ rink.plot <- function(save=FALSE){
       ggforce::geom_circle(data=bqutils::subset.object(rink.frame.layer, "circle", "geom"), inherit.aes=FALSE,
                            ggplot2::aes(x0=x, y0=y, r=r, linewidth=size, color=color, fill=fill))
     rink.plot <- rink.plot +
-      ggplot2::geom_segment(data=bqutils::subset.object(rink.frame.layer, "segment", "geom"), lineend = "square", alpha=transparancy, inherit.aes=FALSE,
+      ggplot2::geom_segment(data=bqutils::subset.object(rink.frame.layer, "segment", "geom"), alpha=transparancy, inherit.aes=FALSE,
                             ggplot2::aes(x=x, xend=xend, y=y, yend=yend, linewidth=size, color=color))
   }
 

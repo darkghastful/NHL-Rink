@@ -1,15 +1,15 @@
 element ,geom,x,xend,y,yend,r,curvature,size,color,fill,inverse.x,inverse.y,layer
 center.line,segment,0,0,42.5,-42.5,,,1,#C8102E,NA,FALSE,FALSE,1
-center.faceoff,circle,0,,0,,0.5,,0.333,#0032A0,#0032A0,FALSE,FALSE,3
+center.faceoff,circle,0,,0,,0.5,,0,#0032A0,#0032A0,FALSE,FALSE,3
 center.faceoff,circle,0,,0,,15,,0.333,#0032A0,NA,FALSE,FALSE,1
-neutral.faceoff,circle,20,,22,,1,,0.333,#000000,#000000,TRUE,TRUE,1
+neutral.faceoff,circle,20,,22,,1,,0,#000000,#000000,TRUE,TRUE,1
 referee.crease,curve,5,-5,-42.5,-42.5,,0.75,0.333,#C8102E,NA,FALSE,FALSE,1
 blue.line,segment,25.25,25.25,42.5,-42.5,,,1,#0032A0,NA,TRUE,FALSE,1
 endzone.faceoff,segment,2,2,0.75,3.75,,,0.333,#C8102E,NA,TRUE,TRUE,1
 endzone.faceoff,segment,2,6,0.75,0.75,,,0.333,#C8102E,NA,TRUE,TRUE,1
 endzone.faceoff,segment,0,0,0,0,,,0.333,#C8102E,NA,TRUE,TRUE,1
 endzone.faceoff,circle,69,,22,,15,,0.333,#C8102E,NA,TRUE,TRUE,1
-endzone.faceoff,circle,69,,22,,1,,0.333,#C8102E,#C8102E,TRUE,TRUE,1
+endzone.faceoff,circle,69,,22,,1,,0,#C8102E,#C8102E,TRUE,TRUE,1
 goal.line,segment,89,89,36.5,-36.5,,,0.333,#C8102E,NA,TRUE,FALSE,2
 goal.crease,segment,89,85,4,4,,,0.333,#C8102E,NA,TRUE,TRUE,1
 goal.crease,segment,100,89,14,11,,,0.333,#C8102E,NA,TRUE,TRUE,1
