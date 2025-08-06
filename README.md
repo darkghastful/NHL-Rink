@@ -9,16 +9,8 @@
 <!-- install.packages("NHL.Rink") -->
 
 ``` r
-# Development version from GitHub:
 # install.packages("devtools")      
 install.packages("darkghastful/NHL.Rink")
-#> Installing package into 'C:/Users/Bailey Quinn/AppData/Local/Temp/Rtmp4mTLRG/temp_libpath46dc157b5f6b'
-#> (as 'lib' is unspecified)
-#> Warning: package 'darkghastful/NHL.Rink' is not available for this version of R
-#> 
-#> A version of this package for your version of R might be available elsewhere,
-#> see the ideas at
-#> https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages
 ```
 
 ------------------------------------------------------------------------
@@ -29,7 +21,6 @@ install.packages("darkghastful/NHL.Rink")
 
 ``` r
 library(NHL.Rink)
-#> Loading required package: ggplot2
 ```
 
 ------------------------------------------------------------------------
