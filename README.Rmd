@@ -1,113 +1,117 @@
 ---
 output: github_document
 ---
-<!-- <div align="center"> -->
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(
-  collapse=TRUE,
-  comment="#>",
-  fig.path="man/figures/README-",
-  out.width="100%"
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
 )
 ```
 
-# NHL.Rink
+# **NHL.Rink**
 
-## Installation
+---
 
-```r
-<!-- # From CRAN (when published) -->
+## **Installation**
+
+<!-- From CRAN (when published) -->
 <!-- install.packages("NHL.Rink") -->
 
-# Or, install the development version from GitHub:
+```{r}
+# Development version from GitHub:
 # install.packages("devtools")      
 install.packages("darkghastful/NHL.Rink")
 ```
 
 ---
 
-## Quick Start
-#### Load Package
+## **Quick Start**
+
+### **Load the package**
+
 ```{r}
 library(NHL.Rink)
 ```
 
-<!-- #### Choose a team logo for the rink -->
+---
+
+<!-- ### **Choose a team** -->
+
 <!-- ```{r} -->
-<!-- NHL.teams()[c(26, 22, 31),] #  Use NHL.teams() for full list -->
+<!-- NHL.teams()[c(26, 22, 31),]  # Use NHL.teams() for full list -->
 <!-- ``` -->
 
+<!-- --- -->
 
-<!-- ```{r rink, fig.width=6, fig.asp=85/200} -->
-<!-- # Generate an NHL regulation rink -->
-<!-- rink.plot() -->
-<!-- ``` -->
+### **Generate a rink with a team logo.**
 
-#### Generate a rink with a team logo in the center 
 ```{r logo.rink, fig.width=6, fig.asp=85/200, dpi=900}
-rink("UTA") # use rink() for empty rink
+rink("UTA") # Use rink() for empty rink
 ```
-
-#### NHL rink with a blues logo generated using calculated equations
-```{r blues.rink, fig.width=6, fig.asp=85/200, dpi=300}
-blues.note.plot(rink=TRUE)
-```
-
-
-<!-- ```{r} -->
-<!-- blues.note.plot() -->
-<!-- ``` -->
 
 ---
 
-## Functions
+### **NHL rink with a blues logo generated using calculated equations.**
 
-### `rink(team=NA)`
+```{r blues.rink, fig.width=6, fig.asp=85/200, dpi=300}
+blues.note.plot(rink = TRUE)
+```
 
-Generates a plot containing an NHL regulation rink with a team logo.
+---
+
+## **Functions**
+
+### `rink(team = NA)`
+
+Generates an NHL regulation rink plot with an optional team logo.
 
 - **Arguments**  
-  - `team` — team name, tri-code, or ID (e.g. `"STL"`).  
+  - `team` — Team name, tri-code, or ID (e.g. `"STL"`).  
 - **Returns**  
   - A **ggplot** object with the rink (and logo if specified).
-  
-### `blues.note.plot(rink=FALSE, save=FALSE)`
 
-Calculates the equations needed to generate a blues note on a coordinate plot then generates a rink with the logo or the logo independently.
+---
+
+### `blues.note.plot(rink = FALSE, save = FALSE)`
+
+Calculates the equations for a Blues note logo and optionally overlays it on a rink.
 
 - **Arguments**  
-  - `rink` — logical; if `TRUE`, overlays the note on a rink.  
-  - `save` — logical; if `TRUE`, writes `blues.note.plot.rds` or `blues.rink.plot.rds`.  
+  - `rink` — Logical; if `TRUE`, overlays the note on a rink.  
+  - `save` — Logical; if `TRUE`, saves as `blues.note.plot.rds` or `blues.rink.plot.rds`.  
 - **Returns**  
-  - A **ggplot** object of the note (and rink if `rink=TRUE`).
+  - A **ggplot** object of the note (and rink if `rink = TRUE`).
+
+---
 
 ### `rink.logo(team)`
 
-Fetches and prepares a team’s logo as a **grob** for annotation.
+Queries and prepares a **grob** of a team logo.
 
 - **Arguments**  
-  - `team` — team name, tri-code, or ID (e.g. `"STL"`).  
+  - `team` — Team name, tri-code, or ID (e.g. `"STL"`).  
 - **Returns**  
   - A **grob** that can be layered onto any ggplot.
 
 ---
 
+## **Dependencies**
 
-### Dependencies:
-
-- **bqutils**
+- **bqutils**  
 - **ggplot2** ≥ 3.5.2  
 - **ggforce**  
-- **rsvg**
-- **magick**
-- **grid**
-- **stringr**
-- **magrittr**
+- **rsvg**  
+- **magick**  
+- **grid**  
+- **stringr**  
+- **magrittr**  
 - **scales**
 
 ---
 
-## License
+## **License**
 
 GPL-3.0 license © Bailey Quinn

@@ -1,109 +1,117 @@
 
-<!-- <div align="center"> -->
+# **NHL.Rink**
 
-# NHL.Rink
+------------------------------------------------------------------------
 
-## Installation
+## **Installation**
 
-``` r
-<!-- # From CRAN (when published) -->
+<!-- From CRAN (when published) -->
 <!-- install.packages("NHL.Rink") -->
 
-# Or, install the development version from GitHub:
+``` r
+# Development version from GitHub:
 # install.packages("devtools")      
 install.packages("darkghastful/NHL.Rink")
+#> Installing package into 'C:/Users/Bailey Quinn/AppData/Local/Temp/Rtmp4mTLRG/temp_libpath46dc157b5f6b'
+#> (as 'lib' is unspecified)
+#> Warning: package 'darkghastful/NHL.Rink' is not available for this version of R
+#> 
+#> A version of this package for your version of R might be available elsewhere,
+#> see the ideas at
+#> https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages
 ```
 
 ------------------------------------------------------------------------
 
-## Quick Start
+## **Quick Start**
 
-#### Load Package
+### **Load the package**
 
 ``` r
 library(NHL.Rink)
 #> Loading required package: ggplot2
 ```
 
-<!-- #### Choose a team logo for the rink -->
-<!-- ```{r} -->
-<!-- NHL.teams()[c(26, 22, 31),] #  Use NHL.teams() for full list -->
-<!-- ``` -->
-<!-- ```{r rink, fig.width=6, fig.asp=85/200} -->
-<!-- # Generate an NHL regulation rink -->
-<!-- rink.plot() -->
-<!-- ``` -->
+------------------------------------------------------------------------
 
-#### Generate a rink with a team logo in the center
+<!-- ### **Choose a team** -->
+<!-- ```{r} -->
+<!-- NHL.teams()[c(26, 22, 31),]  # Use NHL.teams() for full list -->
+<!-- ``` -->
+<!-- --- -->
+
+### **Generate a rink with a team logo.**
 
 ``` r
-rink("UTA") # use rink() for empty rink
+rink("UTA") # Use rink() for empty rink
 ```
 
 <img src="man/figures/README-logo.rink-1.png" width="100%" />
 
-#### NHL rink with a blues logo generated using calculated equations
+------------------------------------------------------------------------
+
+### **NHL rink with a blues logo generated using calculated equations.**
 
 ``` r
-blues.note.plot(rink=TRUE)
+blues.note.plot(rink = TRUE)
 ```
 
 <img src="man/figures/README-blues.rink-1.png" width="100%" />
 
-<!-- ```{r} -->
-<!-- blues.note.plot() -->
-<!-- ``` -->
-
 ------------------------------------------------------------------------
 
-## Functions
+## **Functions**
 
-### `rink(team=NA)`
+### `rink(team = NA)`
 
-Generates a plot containing an NHL regulation rink with a team logo.
+Generates an NHL regulation rink plot with an optional team logo.
 
 - **Arguments**
-  - `team` — team name, tri-code, or ID (e.g. `"STL"`).  
+  - `team` — Team name, tri-code, or ID (e.g. `"STL"`).  
 - **Returns**
   - A **ggplot** object with the rink (and logo if specified).
 
-### `blues.note.plot(rink=FALSE, save=FALSE)`
+------------------------------------------------------------------------
 
-Calculates the equations needed to generate a blues note on a coordinate
-plot then generates a rink with the logo or the logo independently.
+### `blues.note.plot(rink = FALSE, save = FALSE)`
+
+Calculates the equations for a Blues note logo and optionally overlays
+it on a rink.
 
 - **Arguments**
-  - `rink` — logical; if `TRUE`, overlays the note on a rink.  
-  - `save` — logical; if `TRUE`, writes `blues.note.plot.rds` or
+  - `rink` — Logical; if `TRUE`, overlays the note on a rink.  
+  - `save` — Logical; if `TRUE`, saves as `blues.note.plot.rds` or
     `blues.rink.plot.rds`.  
 - **Returns**
-  - A **ggplot** object of the note (and rink if `rink=TRUE`).
+  - A **ggplot** object of the note (and rink if `rink = TRUE`).
+
+------------------------------------------------------------------------
 
 ### `rink.logo(team)`
 
-Fetches and prepares a team’s logo as a **grob** for annotation.
+Queries and prepares a **grob** of a team logo.
 
 - **Arguments**
-  - `team` — team name, tri-code, or ID (e.g. `"STL"`).  
+  - `team` — Team name, tri-code, or ID (e.g. `"STL"`).  
 - **Returns**
   - A **grob** that can be layered onto any ggplot.
 
 ------------------------------------------------------------------------
 
-### Dependencies:
+## **Dependencies**
 
-- **bqutils**
+- **bqutils**  
 - **ggplot2** ≥ 3.5.2  
 - **ggforce**  
-- **rsvg**
-- **magick**
-- **grid**
-- **stringr**
-- **magrittr**
+- **rsvg**  
+- **magick**  
+- **grid**  
+- **stringr**  
+- **magrittr**  
 - **scales**
 
 ------------------------------------------------------------------------
 
-## License
+## **License**
 
 GPL-3.0 license © Bailey Quinn
