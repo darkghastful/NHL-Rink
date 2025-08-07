@@ -1,6 +1,38 @@
+#' Rink save
+#'
+#' @description Wrapper to save a rink as a png
+#'
+#' @param rink provide either a rink function or rink plot
+#' @param scale for plot generation
+#' @param file.name name of output file (default is rink.png)
+#'
+#' @return nothing
+#' @export
+#'
+#' @examples
+#' rink.save(rink("UTA"), scale=rink.scale("in", height=3), file.name="mammoth.rink.png")
+#' rink.save(blues.note.plot(rink=TRUE), scale=1, file.name="blues.rink.png)
+rink.save <- function(rink, scale, file.name="rink.png"){
+  res <- try(scale$scale, silent=TRUE)
 
+  if(inherits(res, "try-error") & !is.numeric(scale)){
+    stop("scale must be output from rink.scale() or a number.")
+  }else if(!inherits(res, "try-error")){
+    scale <- rink.scale("in", scale=scale$scale)
+  }else if(is.numeric(scale)){
+    scale <- rink.scale("in", scale=scale)
+  }
 
-#' Rink Scale
+  if(is.call(substitute(rink))){
+    temp.function <- substitute(rink)
+    temp.function$scale <- scale
+    rink <- eval(temp.function, envir = parent.frame())
+  }
+
+  ggplot2::ggsave(file.name, rink, height=scale$height, width=scale$width, unit=scale$unit)
+}
+
+#' Rink scale
 #'
 #' @description Determine the scale to generate plot and dimensions to save.
 #'
@@ -32,8 +64,8 @@ rink.scale <- function(unit=c("in","mm","cm","ft","px"), ...) {
   scale <- args$scale %||% NA
   dpi <- args$dpi %||% NA
 
-  default.height.mm <- 8.5
-  default.width.mm <- 20
+  default.height.in <- 8.5
+  default.width.in <- 20
 
   unit <- match.arg(unit)
 
@@ -42,43 +74,43 @@ rink.scale <- function(unit=c("in","mm","cm","ft","px"), ...) {
     # stop("You must provide dpi with px.")
   }
 
-  to.mm <- switch(
+  to.in <- switch(
     unit,
-    "mm"=1,
-    "cm"=10,
-    "in"=25.4,
-    "ft"=25.4*12,
-    "px"=25.4/dpi
+    "mm" = 1 / 25.4,
+    "cm" = 1 / 2.54,
+    "in" = 1,
+    "ft" = 12,
+    "px" = 1 / dpi
   )
 
   if(!is.na(scale)){
     final.scale <- scale
   }else if(!is.na(width)){
-    width.mm <- width*to.mm
-    final.scale <- width.mm/default.width.mm
+    width.in <- width*to.in
+    final.scale <- width.in/default.width.in
   }else if(!is.na(height)){
-    height.mm <- height*to.mm
-    final.scale <- height.mm/default.height.mm
+    height.in <- height*to.in
+    final.scale <- height.in/default.height.in
   }else{
     stop("You must provide either height, width, or scale.")
   }
 
-  final.height.mm <- default.height.mm*final.scale
-  final.width.mm <- default.width.mm*final.scale
+  final.height.in <- default.height.in*final.scale
+  final.width.in <- default.width.in*final.scale
 
-  from.mm <- switch(
+  from.in <- switch(
     unit,
-    "mm"=1,
-    "cm"=1/10,
-    "in"=1/25.4,
-    "ft"=1/(25.4*12),
-    "px"=dpi/25.4
+    "mm" = 25.4,
+    "cm" = 2.54,
+    "in" = 1,
+    "ft" = 1/12,
+    "px" = dpi
   )
 
-  final.height <- final.height.mm*from.mm
-  final.width <- final.width.mm*from.mm
+  final.height <- final.height.in*from.in
+  final.width <- final.width.in*from.in
 
-  return(list(scale=final.scale, final.height=final.height, final.width=final.width, unit))
+  return(list(scale=final.scale, height=final.height, width=final.width, unit=unit))
 }
 
 #' Rink
@@ -99,7 +131,7 @@ rink <- function(team=NA, scale=1){
   rink.plotted <- rink.plot(scale)
 
   if(!is.na(team)){
-    logo <- rink.logo(team)
+    logo <- rink.logo(team)$layers
     rink.plotted$layers <- c(logo, rink.plotted$layers)
   }
 
@@ -137,6 +169,7 @@ rink.processing <- function (scale=1, save=FALSE, ...){
 
 
   rink.unprocessed[,"size"] <- rink.unprocessed[,"size"]*2.54
+  rink.unprocessed[,"size"] <- rink.unprocessed[,"size"]*scale
 
   endzone.faceoff.segments <- bqutils::subset.object(bqutils::subset.object(rink.unprocessed, "endzone.faceoff", "element"), "segment", "geom")
 

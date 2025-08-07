@@ -23,16 +23,25 @@ install.packages("darkghastful/NHL.Rink")
 library(NHL.Rink)
 ```
 
-------------------------------------------------------------------------
-
-### **Calculate rink scale**
+### **NHL rink**
 
 ``` r
-# The rink scale needs to be for a plot 12 inches wide as that is the size of the markdown plot
-scale <- rink.scale("in", width=12)  
+scale <- rink.scale("in", height=3) 
+blank.rink <- rink(scale=scale)
+rink.save(blank.rink, scale=scale, file.name="nhl.rink.png")
 ```
 
-------------------------------------------------------------------------
+### **Mammoth rink**
+
+``` r
+rink.save(rink("UTA", scale=scale), scale=1, file.name="mammoth.rink.png")
+```
+
+### **Calculated blues rink**
+
+``` r
+rink.save(blues.note.plot(rink=TRUE), scale=rink.scale("mm", height=85), file.name="calculated.blues.rink.png")
+```
 
 <!-- ### **Choose a team** -->
 <!-- ```{r} -->
@@ -40,37 +49,27 @@ scale <- rink.scale("in", width=12)
 <!-- ``` -->
 <!-- --- -->
 
-### **Generate a rink with a team logo.**
-
-``` r
-rink("UTA", scale=scale) # Use rink() for empty rink
-```
-
-<img src="man/figures/README-logo.rink-1.png" width="100%" />
-
-------------------------------------------------------------------------
-
-### **NHL rink with a blues logo generated using calculated equations.**
-
-``` r
-blues.note.plot(rink = TRUE, scale=12)
-```
-
-<img src="man/figures/README-blues.rink-1.png" width="100%" />
-
 ------------------------------------------------------------------------
 
 ## **Functions**
 
 ### `rink.scale(unit=c("in","mm","cm","ft","px"), ...)`
 
-Determine the scale to generate plot and dimensions to save.
+Determine the scale to generate plot and dimensions to save. To ensure
+the lines of the rink are the correct thickness the scale of the rink
+and the save dimensions must be consistent.
 
 - **Arguments**
   - `unit` — Desired unit to save plot (e.g ‘“in”’).
   - `...` - Must include either height, weight, or scale.
 - **Returns**
   - A plot scale and the save dimensions with the desired unit.
+
+### **Example**
+
+#### `rink.scale(unit = '"in"', width=12)`
+
+The width of the output plots on the markdown file is 12in.
 
 ------------------------------------------------------------------------
 
@@ -79,10 +78,16 @@ Determine the scale to generate plot and dimensions to save.
 Generates an NHL regulation rink plot with an optional team logo.
 
 - **Arguments**
-  - `team` — Team name, tri-code, or ID (e.g. `"STL"`).
+  - `team` — Team name, tri-code, or ID (e.g. `"UTA"`).
   - `scale` - Scale of the desired plot.
 - **Returns**
   - A **ggplot** object with the rink (and logo if specified).
+
+### **Example**
+
+#### `rink(team = '"UTA"', scale = scale)`
+
+<img src="man/figures/README-logo.rink-1.png" width="100%" />
 
 ------------------------------------------------------------------------
 
@@ -99,16 +104,43 @@ it on a rink.
 - **Returns**
   - A **ggplot** object of the note (and rink if `rink = TRUE`).
 
+### **Example**
+
+#### `blues.note.plot(rink = TRUE, scale = scale)`
+
+<img src="man/figures/README-blues.note.plot-1.png" width="100%" />
+
+------------------------------------------------------------------------
+
+### `rink.save(team)`
+
+Wrapper to save a rink as a png
+
+- **Arguments**
+  - `rink` — Either a rink function or plot.
+  - `scale` — Scale of the desired plot.
+  - `file.name` — Name of the output rink png.
+
+### **Example**
+
+#### `rink.save(rink(team = '"SEA"'), scale = 1, file.name = '"kracken.logo.png"')`
+
 ------------------------------------------------------------------------
 
 ### `rink.logo(team)`
 
-Queries and prepares a **grob** of a team logo.
+Queries and prepares a **grob** or **ggplot** of/with a team logo.
 
 - **Arguments**
-  - `team` — Team name, tri-code, or ID (e.g. `"STL"`).  
+  - `team` — Team name, tri-code, or ID (e.g. `"SEA"`).  
 - **Returns**
-  - A **grob** that can be layered onto any ggplot.
+  - A **grob** or **ggplot**.
+
+### **Example**
+
+#### `rink.logo(team = '"SEA"')`
+
+<img src="man/figures/README-logo-1.png" width="100%" />
 
 ------------------------------------------------------------------------
 

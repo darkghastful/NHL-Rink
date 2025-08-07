@@ -2,7 +2,7 @@
 % Please edit documentation in R/rink.R
 \name{rink.scale}
 \alias{rink.scale}
-\title{Rink Scale}
+\title{Rink scale}
 \usage{
 rink.scale(unit = c("in", "mm", "cm", "ft", "px"), ...)
 }

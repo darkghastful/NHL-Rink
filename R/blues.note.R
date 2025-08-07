@@ -10,6 +10,8 @@
 rink.logo <- function(team){
   csv.path <- system.file("extdata", "team.logos.csv", package="NHL.Rink")
   team.logos <- utils::read.csv(csv.path)
+  # team.logos <- read.csv("inst/extdata/team.logos.csv")
+
   team <- teamName.teamId.triCode(team, team.logos)$triCode
   logo <- suppressWarnings(team.logos[team.logos[,"triCode"]==team,])
   if(nrow(logo)>1){
@@ -21,7 +23,11 @@ rink.logo <- function(team){
   raster <- grDevices::as.raster(logo)
   grob <- grid::rasterGrob(raster, width=grid::unit(1, "snpc"), height=grid::unit(1, "snpc"), just="centre", interpolate=TRUE)
   logo.size <- 13
-  team.logo <- ggplot2::annotation_custom(ymin=-logo.size, ymax=logo.size, xmin=-logo.size, xmax=logo.size, grob=grob)
+
+  team.logo <- ggplot2::ggplot() +
+    ggplot2::theme_void() +
+    ggplot2::coord_fixed(xlim = c(-logo.size, logo.size), ylim = c(-logo.size, logo.size), expand = FALSE) +
+    ggplot2::annotation_custom(ymin=-logo.size, ymax=logo.size, xmin=-logo.size, xmax=logo.size, grob=grob)
   return(team.logo)
 }
 
@@ -124,13 +130,10 @@ blues.note.processing <- function(save=FALSE, ...){
 #'
 #' @examples
 #' blues.note.plot()
-blues.note.plot <- function(rink=FALSE, scale=NA, save=FALSE){
+blues.note.plot <- function(rink=FALSE, scale=1, save=FALSE){
   blues.note <- blues.note.processing()
 
   if(rink){
-    if(is.na(scale)){
-      stop("Please provide scale to generate rink.")
-    }
     direction <- c("x", "y")
     for(a in seq_len(length(direction))){
       max <- max(blues.note[, direction[a]])

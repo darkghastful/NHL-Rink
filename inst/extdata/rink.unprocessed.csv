@@ -1,6 +1,6 @@
 element ,geom,x,xend,y,yend,r,curvature,size,color,fill,inverse.x,inverse.y,layer
 center.line,segment,0,0,42,-42,,,1,#C8102E,NA,FALSE,FALSE,1
-center.faceoff,circle,0,,0,,0.5,,0,NA,#0032A0,FALSE,FALSE,3
+center.faceoff,circle,0,,0,,0.4,,0,NA,#0032A0,FALSE,FALSE,3
 center.faceoff,circle,0,,0,,15,,0.333,#0032A0,NA,FALSE,FALSE,1
 neutral.faceoff,circle,20,,22,,1,,0,NA,#000000,TRUE,TRUE,1
 referee.crease,curve,5,-5,-42,-42,,0.75,0.333,#C8102E,NA,FALSE,FALSE,1

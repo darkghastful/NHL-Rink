@@ -3,6 +3,7 @@ teamName.teamId.triCode <- function(team, object = NA) {
   if (all(is.na(object))) {
     csv.path <- system.file("extdata", "team.logos.csv", package="NHL.Rink")
     object <- utils::read.csv(csv.path)
+    # object <- read.csv("inst/extdata/team.logos.csv")
   }
 
   if (length(stringr::str_split(team, " ")[[1]]) > 1) {
