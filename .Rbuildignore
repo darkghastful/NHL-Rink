@@ -8,3 +8,5 @@
 ^README\.html$
 ^rink\.plot\.rds$
 ^test\.read\.me\.Rmd$
+^Exclude/
+^inst/extdata/kraken\.png$

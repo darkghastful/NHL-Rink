@@ -136,7 +136,7 @@ Wrapper to save a rink as a png
   - `file.name` — Name of the output rink png.
   
 ### **Example**
-#### `rink.save(rink(team = '"SEA"'), scale = 1, file.name = '"kracken.logo.png"')`
+#### `rink.save(rink(team = '"SEA"'), scale = 1, file.name = '"kraken.logo.png"')`
 
 ---
 
@@ -151,9 +151,10 @@ Queries and prepares a **grob** or **ggplot** of/with a team logo.
 
 ### **Example**
 #### `rink.logo(team = '"SEA"')`
-```{r logo, fig.width=3, dpi=300, echo=FALSE}
-rink.logo("SEA") 
+```{r, echo=FALSE}
+ggsave("inst/extdata/kraken.png", rink.logo("SEA"), width=3, height=3)
 ```
+![](inst/extdata/kraken.png)
 
 ---
 
