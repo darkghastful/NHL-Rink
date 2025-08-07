@@ -152,7 +152,7 @@ Queries and prepares a **grob** or **ggplot** of/with a team logo.
 ### **Example**
 #### `rink.logo(team = '"SEA"')`
 ```{r, echo=FALSE}
-ggsave("inst/extdata/kraken.png", rink.logo("SEA"), width=3, height=3)
+ggsave("inst/extdata/kraken.png", rink.logo("SEA"), width=9, height=3)
 ```
 ![](inst/extdata/kraken.png)
 
