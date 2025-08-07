@@ -151,7 +151,7 @@ Queries and prepares a **grob** or **ggplot** of/with a team logo.
 
 ### **Example**
 #### `rink.logo(team = '"SEA"')`
-```{r logo, fig.width=6, dpi=300, echo=FALSE}
+```{r logo, fig.width=3, dpi=300, echo=FALSE}
 rink.logo("SEA") 
 ```
 
