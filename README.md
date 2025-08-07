@@ -68,18 +68,19 @@ Determine the scale to generate plot and dimensions to save.
 
 - **Arguments**
   - `unit` — Desired unit to save plot (e.g ‘“in”’).
-  - ‘…’ - Must include either height, weight, or scale.
+  - `...` - Must include either height, weight, or scale.
 - **Returns**
   - A plot scale and the save dimensions with the desired unit.
 
 ------------------------------------------------------------------------
 
-### `rink(team = NA)`
+### `rink(team = NA, scale)`
 
 Generates an NHL regulation rink plot with an optional team logo.
 
 - **Arguments**
-  - `team` — Team name, tri-code, or ID (e.g. `"STL"`).  
+  - `team` — Team name, tri-code, or ID (e.g. `"STL"`).
+  - `scale` - Scale of the desired plot.
 - **Returns**
   - A **ggplot** object with the rink (and logo if specified).
 
@@ -92,6 +93,7 @@ it on a rink.
 
 - **Arguments**
   - `rink` — Logical; if `TRUE`, overlays the note on a rink.  
+  - `scale` - Scale of the desired plot.
   - `save` — Logical; if `TRUE`, saves as `blues.note.plot.rds` or
     `blues.rink.plot.rds`.  
 - **Returns**
