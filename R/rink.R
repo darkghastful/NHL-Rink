@@ -135,8 +135,6 @@ rink.processing <- function (scale=1, save=FALSE, ...){
   rink.y <- 85
   rink.x <- 200
 
-  print(scale)
-
 
   rink.unprocessed[,"size"] <- rink.unprocessed[,"size"]*2.54
 
