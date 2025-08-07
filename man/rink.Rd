@@ -4,10 +4,12 @@
 \alias{rink}
 \title{Rink}
 \usage{
-rink(team = NA)
+rink(team = NA, scale = 1)
 }
 \arguments{
 \item{team}{teamName teamTriCode or teamId accepted (default is NA)}
+
+\item{scale}{for plot generation}
 }
 \value{
 rink.plot
@@ -16,5 +18,5 @@ rink.plot
 Generates a plot containing an NHL regulation rink with a team logo.
 }
 \examples{
-rink("STL")
+rink("STL", 1)
 }

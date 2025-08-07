@@ -116,6 +116,7 @@ blues.note.processing <- function(save=FALSE, ...){
 #' @description Generates a plot with a blues note or a rink with a blues note.
 #'
 #' @param rink boolean switch referencing the inclusion of the blues note in a rink plot (default is FALSE)
+#' @param scale for plot generation
 #' @param save boolean switch referencing an object save of blues.rink.plot.rds or blues.note.plot.rds (default is FALSE)
 #'
 #' @return blues.plot
@@ -123,10 +124,13 @@ blues.note.processing <- function(save=FALSE, ...){
 #'
 #' @examples
 #' blues.note.plot()
-blues.note.plot <- function(rink=FALSE, save=FALSE){
+blues.note.plot <- function(rink=FALSE, scale=NA, save=FALSE){
   blues.note <- blues.note.processing()
 
   if(rink){
+    if(is.na(scale)){
+      stop("Please provide scale to generate rink.")
+    }
     direction <- c("x", "y")
     for(a in seq_len(length(direction))){
       max <- max(blues.note[, direction[a]])
@@ -140,7 +144,7 @@ blues.note.plot <- function(rink=FALSE, save=FALSE){
     }
 
     transparancy <- 1
-    blues.plot <- rink.plot()
+    blues.plot <- rink.plot(scale)
     rink.layers <- length(blues.plot$layers)
   }else{
     transparancy <- 1

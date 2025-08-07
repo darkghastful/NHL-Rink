@@ -4,10 +4,12 @@
 \alias{blues.note.plot}
 \title{Blues note plot}
 \usage{
-blues.note.plot(rink = FALSE, save = FALSE)
+blues.note.plot(rink = FALSE, scale = NA, save = FALSE)
 }
 \arguments{
 \item{rink}{boolean switch referencing the inclusion of the blues note in a rink plot (default is FALSE)}
+
+\item{scale}{for plot generation}
 
 \item{save}{boolean switch referencing an object save of blues.rink.plot.rds or blues.note.plot.rds (default is FALSE)}
 }

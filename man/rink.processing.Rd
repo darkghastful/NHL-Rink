@@ -4,9 +4,11 @@
 \alias{rink.processing}
 \title{Rink processing}
 \usage{
-rink.processing(save = FALSE, ...)
+rink.processing(scale = 1, save = FALSE, ...)
 }
 \arguments{
+\item{scale}{for plot generation}
+
 \item{save}{boolean switch referencing a csv save of the intermediate rink.frame.csv (default is FALSE)}
 
 \item{...}{optional arguments for internal processing (unused)}
@@ -18,5 +20,5 @@ rink.frame
 Generates a frame used to plot an NHL regulation ice rink from simple information.
 }
 \examples{
-rink.processing()
+rink.processing(1)
 }

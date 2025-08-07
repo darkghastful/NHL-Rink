@@ -4,9 +4,11 @@
 \alias{rink.plot}
 \title{Rink plot}
 \usage{
-rink.plot(save = FALSE)
+rink.plot(scale = 1, save = FALSE)
 }
 \arguments{
+\item{scale}{for plot generation}
+
 \item{save}{boolean switch referencing an object save of rink.plot.rds (default is FALSE)}
 }
 \value{

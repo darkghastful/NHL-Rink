@@ -1,24 +1,109 @@
+
+
+#' Rink Scale
+#'
+#' @description Determine the scale to generate plot and dimensions to save.
+#'
+#'
+#' @param unit desired unit to save plot c("in","mm","cm","ft","px")
+#' @param ... must include one of the following (height=#), (width=#), (scale=#)
+#'
+#' @return c(scale, height, width, unit) scale used to generate plot and the desired dimensions and unit to save the plot
+#' @export
+#'
+#' @examples
+#' rink.scale("px", height=400, dpi=300)
+#' rink.scale("mm", width=100)
+#' rink.scale("in", scale=2)
+rink.scale <- function(unit=c("in","mm","cm","ft","px"), ...) {
+
+  args <- list(...)
+
+  `%||%` <- function(a, b){
+    if(!is.null(a)){
+      as.numeric(a)
+    }else{
+      b
+    }
+  }
+
+  height <- args$height %||% NA
+  width <- args$width %||% NA
+  scale <- args$scale %||% NA
+  dpi <- args$dpi %||% NA
+
+  default.height.mm <- 8.5
+  default.width.mm <- 20
+
+  unit <- match.arg(unit)
+
+  if(unit=="px" & is.na(dpi)){
+    dpi=300
+    # stop("You must provide dpi with px.")
+  }
+
+  to.mm <- switch(
+    unit,
+    "mm"=1,
+    "cm"=10,
+    "in"=25.4,
+    "ft"=25.4*12,
+    "px"=25.4/dpi
+  )
+
+  if(!is.na(scale)){
+    final.scale <- scale
+  }else if(!is.na(width)){
+    width.mm <- width*to.mm
+    final.scale <- width.mm/default.width.mm
+  }else if(!is.na(height)){
+    height.mm <- height*to.mm
+    final.scale <- height.mm/default.height.mm
+  }else{
+    stop("You must provide either height, width, or scale.")
+  }
+
+  final.height.mm <- default.height.mm*final.scale
+  final.width.mm <- default.width.mm*final.scale
+
+  from.mm <- switch(
+    unit,
+    "mm"=1,
+    "cm"=1/10,
+    "in"=1/25.4,
+    "ft"=1/(25.4*12),
+    "px"=dpi/25.4
+  )
+
+  final.height <- final.height.mm*from.mm
+  final.width <- final.width.mm*from.mm
+
+  return(list(scale=final.scale, final.height=final.height, final.width=final.width, unit))
+}
+
 #' Rink
 #'
 #' @description Generates a plot containing an NHL regulation rink with a team logo.
 #'
 #' @param team teamName teamTriCode or teamId accepted (default is NA)
+#' @param scale for plot generation
 #'
 #' @return rink.plot
 #' @export
 #'
 #' @examples
-#' rink("STL")
-rink <- function(team=NA){
-  rds.path <- system.file("extdata", "rink.plot.rds", package="NHL.Rink")
-  rink.plot <- readRDS(rds.path)
+#' rink("STL", 1)
+rink <- function(team=NA, scale=1){
+  # rds.path <- system.file("extdata", "rink.plot.rds", package="NHL.Rink")
+  # rink.plot <- readRDS(rds.path)
+  rink.plotted <- rink.plot(scale)
 
   if(!is.na(team)){
     logo <- rink.logo(team)
-    rink.plot$layers <- c(logo, rink.plot$layers)
+    rink.plotted$layers <- c(logo, rink.plotted$layers)
   }
 
-  return(rink.plot)
+  return(rink.plotted)
 }
 
 
@@ -26,6 +111,7 @@ rink <- function(team=NA){
 #'
 #' @description Generates a frame used to plot an NHL regulation ice rink from simple information.
 #'
+#' @param scale for plot generation
 #' @param save boolean switch referencing a csv save of the intermediate rink.frame.csv (default is FALSE)
 #' @param ... optional arguments for internal processing (unused)
 #'
@@ -33,24 +119,26 @@ rink <- function(team=NA){
 #' @export
 #'
 #' @examples
-#' rink.processing()
-rink.processing <- function (save=FALSE, ...){
+#' rink.processing(1)
+rink.processing <- function (scale=1, save=FALSE, ...){
+  if(length(scale)>1){
+    scale <- scale$scale
+  }
+
   args <- list(...)
   if(!exists("rink.unprocessed")){
     csv.path <- system.file("extdata", "rink.unprocessed.csv", package="NHL.Rink")
     rink.unprocessed <- utils::read.csv(csv.path)
-    rink.unprocessed <- utils::read.csv("inst/extdata/rink.unprocessed.csv")
+    # rink.unprocessed <- utils::read.csv("inst/extdata/rink.unprocessed.csv")
   }
 
-  rink.y <- 90
-  rink.x <- (200/85)*90
-  rink.scale <- 10
+  rink.y <- 85
+  rink.x <- 200
 
-  # rink.unprocessed[,"size"] <- (rink.unprocessed[,"size"] / rink.scale)*25.4
-  rink.unprocessed[,"size"] <- (rink.unprocessed[,"size"] * 25.4)/rink.scale
+  print(scale)
 
-  rink.unprocessed[which(rink.unprocessed[,"geom"]=="segment"), "size"] <- (rink.unprocessed[which(rink.unprocessed[,"geom"]=="segment"), "size"]/0.75)*1
-  rink.unprocessed[which(rink.unprocessed[,"geom"]=="curve"), "size"] <- (rink.unprocessed[which(rink.unprocessed[,"geom"]=="curve"), "size"]/0.75)*1
+
+  rink.unprocessed[,"size"] <- rink.unprocessed[,"size"]*2.54
 
   endzone.faceoff.segments <- bqutils::subset.object(bqutils::subset.object(rink.unprocessed, "endzone.faceoff", "element"), "segment", "geom")
 
@@ -98,6 +186,7 @@ rink.processing <- function (save=FALSE, ...){
 #'
 #' @description Generates a plot containing an NHL regulation ice rink.
 #'
+#' @param scale for plot generation
 #' @param save boolean switch referencing an object save of rink.plot.rds (default is FALSE)
 #'
 #' @return rink.plot
@@ -105,22 +194,25 @@ rink.processing <- function (save=FALSE, ...){
 #'
 #' @examples
 #' rink.plot()
-rink.plot <- function(save=FALSE){
-  rink.frame <- rink.processing()
+rink.plot <- function(scale=1, save=FALSE){
+  if(length(scale)>1){
+    scale <- scale$scale
+  }
+
+  rink.frame <- rink.processing(scale)
 
   transparancy <- 1
-  rink.y <- 90
-  rink.x <- (200/85)*90
-  rink.scale <- 300
-  rink.frame[,"size"] <- as.numeric(rink.frame[,"size"])
+  rink.y <- 85
+  rink.x <- 200
 
   rink.plot <- ggplot2::ggplot() +
     ggplot2::theme_void() +
     ggplot2::scale_linewidth_identity() +
     ggplot2::scale_color_identity() +
     ggplot2::scale_fill_identity() +
-    ggplot2::scale_x_continuous(limits=c(-(rink.x/2), (rink.x/2)), breaks=seq(-100, 100, by=25), expand=ggplot2::expansion(mult=c(0.01, 0.01))) +
-    ggplot2::scale_y_continuous(limits=c(-(rink.y/2), (rink.y/2)), breaks=seq(-42.5, 42.5, by=25), expand=ggplot2::expansion(mult=c(0.01, 0.01)))
+    ggplot2::scale_x_continuous(limits=c(-(rink.x/2), (rink.x/2)), breaks=seq(-100, 100, by=25), expand=ggplot2::expansion(mult=c(0, 0))) +
+    ggplot2::scale_y_continuous(limits=c(-(rink.y/2), (rink.y/2)), breaks=seq(-42.5, 42.5, by=1), expand=ggplot2::expansion(mult=c(0, 0))) +
+    ggplot2::coord_fixed()
 
   layers <- bqutils::uuln(rink.frame[,"layer"]) %>%
     .[order(.)]
@@ -133,7 +225,7 @@ rink.plot <- function(save=FALSE){
     if(nrow(rink.frame.layer.curve)>0){
       for(a in 1:nrow(rink.frame.layer.curve)){
         rink.plot <- rink.plot +
-          ggplot2::geom_curve(data=rink.frame.layer.curve[a,], alpha=transparancy, inherit.aes=FALSE, curvature=rink.frame.layer.curve[a, "curvature"],
+          ggplot2::geom_curve(data=rink.frame.layer.curve[a,], lineend="round", alpha=transparancy, inherit.aes=FALSE, curvature=rink.frame.layer.curve[a, "curvature"],
                               ggplot2::aes(x=x, xend=xend, y=y, yend=yend, linewidth=size, color=color))
       }
     }

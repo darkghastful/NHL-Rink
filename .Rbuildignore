@@ -4,3 +4,7 @@
 ^README\.Rmd$
 ^package.creation\.R$
 ^NHL\.logos\.R$
+^test\.rink\.png$
+^README\.html$
+^rink\.plot\.rds$
+^test\.read\.me\.Rmd$

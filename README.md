@@ -25,6 +25,15 @@ library(NHL.Rink)
 
 ------------------------------------------------------------------------
 
+### **Calculate rink scale**
+
+``` r
+# The rink scale needs to be for a plot 12 inches wide as that is the size of the markdown plot
+scale <- rink.scale("in", width=12)  
+```
+
+------------------------------------------------------------------------
+
 <!-- ### **Choose a team** -->
 <!-- ```{r} -->
 <!-- NHL.teams()[c(26, 22, 31),]  # Use NHL.teams() for full list -->
@@ -34,7 +43,8 @@ library(NHL.Rink)
 ### **Generate a rink with a team logo.**
 
 ``` r
-rink("UTA") # Use rink() for empty rink
+rink("UTA", scale=scale) # Use rink() for empty rink
+#> [1] 15.24
 ```
 
 <img src="man/figures/README-logo.rink-1.png" width="100%" />
@@ -44,7 +54,8 @@ rink("UTA") # Use rink() for empty rink
 ### **NHL rink with a blues logo generated using calculated equations.**
 
 ``` r
-blues.note.plot(rink = TRUE)
+blues.note.plot(rink = TRUE, scale=12)
+#> [1] 12
 ```
 
 <img src="man/figures/README-blues.rink-1.png" width="100%" />
@@ -52,6 +63,18 @@ blues.note.plot(rink = TRUE)
 ------------------------------------------------------------------------
 
 ## **Functions**
+
+### `rink.scale(unit=c("in","mm","cm","ft","px"), ...)`
+
+Determine the scale to generate plot and dimensions to save.
+
+- **Arguments**
+  - `unit` — Desired unit to save plot (e.g ‘“in”’).
+  - ‘…’ - Must include either height, weight, or scale.
+- **Returns**
+  - A plot scale and the save dimensions with the desired unit.
+
+------------------------------------------------------------------------
 
 ### `rink(team = NA)`
 
