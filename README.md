@@ -53,7 +53,7 @@ rink.save(blues.note.plot(rink=TRUE), scale=rink.scale("mm", height=85), file.na
 
 ## **Functions**
 
-### `rink.scale(unit=c("in","mm","cm","ft","px"), ...)`
+### `rink.scale(unit = c("in","mm","cm","ft","px"), ...)`
 
 Determine the scale to generate plot and dimensions to save. To ensure
 the lines of the rink are the correct thickness the scale of the rink
@@ -67,7 +67,7 @@ and the save dimensions must be consistent.
 
 ### **Example**
 
-#### `rink.scale(unit = '"in"', width=12)`
+#### `scale <- rink.scale(unit = '"in"', width = 12)`
 
 The width of the output plots on the markdown file is 12in.
 
@@ -112,7 +112,7 @@ it on a rink.
 
 ------------------------------------------------------------------------
 
-### `rink.save(team)`
+### `rink.save(rink, scale, file.name = "rink.png)`
 
 Wrapper to save a rink as a png
 
