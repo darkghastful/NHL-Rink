@@ -44,7 +44,6 @@ scale <- rink.scale("in", width=12)
 
 ``` r
 rink("UTA", scale=scale) # Use rink() for empty rink
-#> [1] 15.24
 ```
 
 <img src="man/figures/README-logo.rink-1.png" width="100%" />
@@ -55,7 +54,6 @@ rink("UTA", scale=scale) # Use rink() for empty rink
 
 ``` r
 blues.note.plot(rink = TRUE, scale=12)
-#> [1] 12
 ```
 
 <img src="man/figures/README-blues.rink-1.png" width="100%" />
