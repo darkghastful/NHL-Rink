@@ -60,36 +60,32 @@ the lines of the rink are the correct thickness the scale of the rink
 and the save dimensions must be consistent.
 
 - **Arguments**
-  - `unit` — Desired unit to save plot (e.g ‘“in”’).
+  - `unit` - Desired unit to save plot (e.g ‘“in”’).
   - `...` - Must include either height, weight, or scale.
 - **Returns**
   - A plot scale and the save dimensions with the desired unit.
 
 ### **Example**
 
-#### `scale <- rink.scale(unit = '"in"', width = 12)`
+#### `scale <- rink.scale(unit = "in", width = 12)`
 
 The width of the output plots on the markdown file is 12in.
-
-------------------------------------------------------------------------
 
 ### `rink(team = NA, scale)`
 
 Generates an NHL regulation rink plot with an optional team logo.
 
 - **Arguments**
-  - `team` — Team name, tri-code, or ID (e.g. `"UTA"`).
+  - `team` - Team name, tri-code, or ID (e.g. `"UTA"`).
   - `scale` - Scale of the desired plot.
 - **Returns**
   - A **ggplot** object with the rink (and logo if specified).
 
 ### **Example**
 
-#### `rink(team = '"UTA"', scale = scale)`
+#### `rink(team = "UTA", scale = scale)`
 
 <img src="man/figures/README-logo.rink-1.png" width="100%" />
-
-------------------------------------------------------------------------
 
 ### `blues.note.plot(rink = FALSE, save = FALSE)`
 
@@ -110,9 +106,7 @@ it on a rink.
 
 <img src="man/figures/README-blues.note.plot-1.png" width="100%" />
 
-------------------------------------------------------------------------
-
-### `rink.save(rink, scale, file.name = "rink.png)`
+### `rink.save(rink, scale, file.name = "rink.png")`
 
 Wrapper to save a rink as a png
 
@@ -123,9 +117,7 @@ Wrapper to save a rink as a png
 
 ### **Example**
 
-#### `rink.save(rink(team = '"SEA"'), scale = 1, file.name = '"kraken.logo.png"')`
-
-------------------------------------------------------------------------
+#### `rink.save(rink(team = "SEA"), scale = 1, file.name = "kraken.logo.png")`
 
 ### `rink.logo(team)`
 
@@ -138,7 +130,7 @@ Queries and prepares a **grob** or **ggplot** of/with a team logo.
 
 ### **Example**
 
-#### `rink.logo(team = '"SEA"')`
+#### `rink.logo(team = "SEA")`
 
 ![](inst/extdata/kraken.png)
 
