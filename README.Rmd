@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# **NHL.Rink**
+# **[NHL.Rink](https://github.com/darkghastful/NHL-Rink)**
 
 ---
 
