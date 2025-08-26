@@ -1,16 +1,16 @@
 
-# **[NHL.Rink](https://github.com/darkghastful/NHL-Rink)**
+# **[SLAPrink](https://github.com/darkghastful/SLAP-Rink)**
 
 ------------------------------------------------------------------------
 
 ## **Installation**
 
 <!-- From CRAN (when published) -->
-<!-- install.packages("NHL.Rink") -->
+<!-- install.packages("SLAPrink") -->
 
 ``` r
 # install.packages("devtools")      
-install.packages("darkghastful/NHL.Rink")
+install.packages("darkghastful/SLAPrink")
 ```
 
 ------------------------------------------------------------------------
@@ -20,7 +20,7 @@ install.packages("darkghastful/NHL.Rink")
 ### **Load the package**
 
 ``` r
-library(NHL.Rink)
+library(SLAPrink)
 ```
 
 ### **NHL rink**

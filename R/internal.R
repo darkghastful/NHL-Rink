@@ -1,7 +1,7 @@
 #' @keywords internal
 teamName.teamId.triCode <- function(team, object = NA) {
   if (all(is.na(object))) {
-    csv.path <- system.file("extdata", "team.logos.csv", package="NHL.Rink")
+    csv.path <- system.file("extdata", "team.logos.csv", package="SLAPrink")
     object <- utils::read.csv(csv.path)
     # object <- read.csv("inst/extdata/team.logos.csv")
   }
@@ -35,7 +35,7 @@ content.from.endpoint <- function(url, content.type = "application/octet-stream"
 
 #' @keywords internal
 NHL.teams <- function(){
-  csv.path <- system.file("extdata", "team.logos.csv", package="NHL.Rink")
+  csv.path <- system.file("extdata", "team.logos.csv", package="SLAPrink")
   object <- utils::read.csv(csv.path)
   object <- object[, c("teamName", "teamId", "triCode")]
   return(object)

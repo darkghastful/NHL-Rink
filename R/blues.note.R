@@ -8,7 +8,7 @@
 #' @examples
 #' rink.logo("STL")
 rink.logo <- function(team){
-  csv.path <- system.file("extdata", "team.logos.csv", package="NHL.Rink")
+  csv.path <- system.file("extdata", "team.logos.csv", package="SLAPrink")
   team.logos <- utils::read.csv(csv.path)
   # team.logos <- read.csv("inst/extdata/team.logos.csv")
 
@@ -48,7 +48,7 @@ rink.logo <- function(team){
 blues.note.processing <- function(save=FALSE, ...){
   args <- list(...)
   if(!exists("blues.unprocessed")){
-    csv.path <- system.file("extdata", "blues.unprocessed.csv", package="NHL.Rink")
+    csv.path <- system.file("extdata", "blues.unprocessed.csv", package="SLAPrink")
     blues.unprocessed <- utils::read.csv(csv.path)
     # blues.unprocessed <- utils::read.csv("inst/extdata/blues.unprocessed.csv")
   }

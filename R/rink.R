@@ -126,7 +126,7 @@ rink.scale <- function(unit=c("in","mm","cm","ft","px"), ...) {
 #' @examples
 #' rink("STL", 1)
 rink <- function(team=NA, scale=1){
-  # rds.path <- system.file("extdata", "rink.plot.rds", package="NHL.Rink")
+  # rds.path <- system.file("extdata", "rink.plot.rds", package="SLAPrink")
   # rink.plot <- readRDS(rds.path)
   rink.plotted <- rink.plot(scale)
 
@@ -159,7 +159,7 @@ rink.processing <- function (scale=1, save=FALSE, ...){
 
   args <- list(...)
   if(!exists("rink.unprocessed")){
-    csv.path <- system.file("extdata", "rink.unprocessed.csv", package="NHL.Rink")
+    csv.path <- system.file("extdata", "rink.unprocessed.csv", package="SLAPrink")
     rink.unprocessed <- utils::read.csv(csv.path)
     # rink.unprocessed <- utils::read.csv("inst/extdata/rink.unprocessed.csv")
   }
